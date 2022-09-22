@@ -42,6 +42,7 @@ arg_enum! {
 pub enum KeyHost {
     Gitlab,
     Github,
+    Sourcehut,
 }
 }
 

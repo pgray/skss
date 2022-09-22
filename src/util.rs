@@ -10,6 +10,10 @@ pub async fn get_keys(host: &KeyHost, user: &str) -> Result<String, Box<dyn std:
             .await?
             .text()
             .await?),
+        KeyHost::Sourcehut => Ok(reqwest::get(format!("https://meta.sr.ht/~{}.keys", user))
+            .await?
+            .text()
+            .await?),
     }
 }
 use std::fs::{create_dir, File};
