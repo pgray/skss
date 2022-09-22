@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+RUST_LOG=debug cargo run -- cron --users pgray
+
+tree /var/tmp/gss
