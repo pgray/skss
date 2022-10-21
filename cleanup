@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-rm -r /var/tmp/gss
+rm -r /var/tmp/skss

@@ -22,7 +22,7 @@ enum Commands {
         users: Vec<String>,
         #[clap(long, default_value = "github")]
         host: KeyHost,
-        #[clap(long, default_value = "/var/tmp/gss")]
+        #[clap(long, default_value = "/var/tmp/skss")]
         tmpdir: String,
     },
     Server {
@@ -32,7 +32,7 @@ enum Commands {
         users: Vec<String>,
         #[clap(long, default_value = "github")]
         host: KeyHost,
-        #[clap(long, default_value = "/var/tmp/gss")]
+        #[clap(long, default_value = "/var/tmp/skss")]
         tmpdir: String,
     },
 }
