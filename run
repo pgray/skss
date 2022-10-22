@@ -1,4 +1,2 @@
 #!/usr/bin/env bash
-RUST_LOG=debug cargo run -- cron --users pgray
-
-tree /var/tmp/skss
+RUST_LOG=debug cargo run -- cron --users pgray,carlasouza && tree /var/tmp/skss

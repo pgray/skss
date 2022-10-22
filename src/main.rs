@@ -62,14 +62,51 @@ impl Cron {
             info!("got keys: {}", resp.clone().to_string());
             let err = write_tmp(i.clone(), resp.to_string(), self.tmpdir.clone()).await;
             match err {
-                Ok(_) => println!("ok"),
+                Ok(_) => println!("wrote file ok for user {}", &i),
                 Err(e) => error!("{}", e),
+            }
+            use nix::unistd::{Group, User};
+            let u = match User::from_name(&i) {
+                Ok(u) => u,
+                Err(e) => {
+                    error!("failed to find user by name: {} error ({})", &i, e);
+                    None
+                }
+            };
+            let u = match u {
+                Some(u) => u.uid,
+                None => nix::unistd::getuid(),
+            };
+            let g = match Group::from_name(&i) {
+                Ok(g) => g,
+                Err(e) => {
+                    error!("failed to find group by name: {} error ({})", &i, e);
+                    None
+                }
+            };
+            let g = match g {
+                Some(g) => g.gid,
+                None => nix::unistd::getgid(),
+            };
+            use nix::unistd::chown;
+            match chown(self.tmpdir.clone().as_str(), Some(u), Some(g)) {
+                Ok(()) => {}
+                Err(e) => {
+                    error!("failed to chown: {}", e);
+                    continue;
+                }
             }
             if update(&i, self.tmpdir.clone()).await? {
                 let user_ssh_path = format!("/home/{}/.ssh", i.clone());
                 if !std::path::Path::new(&user_ssh_path).is_dir() {
                     use std::fs::create_dir_all;
-                    create_dir_all(&user_ssh_path)?;
+                    match create_dir_all(&user_ssh_path) {
+                        Ok(()) => {}
+                        Err(e) => {
+                            error!("failed with {}", e);
+                            return Ok(());
+                        }
+                    }
                 }
                 metadata(user_ssh_path)?.permissions().set_mode(0o700);
                 let auth_path = format!("/home/{}/.ssh/authorized_keys", i);

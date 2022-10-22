@@ -7,5 +7,6 @@ edition = "2021"
 clap = { version = "3.2.17", features = ["derive"] }
 env_logger = "0.9.0"
 log = "0.4.17"
+nix = { version = "0.25.0", features = ["fs", "user"] }
 reqwest = { version = "0.11.11", features = ["blocking"] }
 tokio = { version = "1.20.1", features = ["full"] }
